@@ -3,6 +3,10 @@
 > **Testing only.** This tooling is intended for installing a specific ODF z-stream
 > version on a **fresh/new cluster** in lab or test environments. It has not been
 > validated for production use. Always test on a non-production cluster first.
+>
+> **Pinning a z-stream release is not officially supported by Red Hat.** If you
+> need guidance or encounter issues, raise a support case at
+> https://access.redhat.com/support/cases/ for assistance.
 
 ## Problem
 
