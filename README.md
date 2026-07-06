@@ -229,6 +229,10 @@ oc get sc
 
 ## Updating ODF After Pinning
 
+> **Note:** The update procedures below describe the expected workflow but have
+> **not been tested yet**. Validate on a non-production cluster before relying
+> on them.
+
 With the pruned catalog, OLM cannot auto-update (only one version exists).
 Updates are manual but controlled.
 
