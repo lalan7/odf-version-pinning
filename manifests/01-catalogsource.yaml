@@ -1,0 +1,19 @@
+# CatalogSource for pinned ODF version.
+#
+# By default, this uses the cluster's internal image registry.
+# If you pushed the catalog image to an external registry (e.g., Quay),
+# replace the image field with your registry path:
+#   image: quay.io/<your-org>/odf-pinned-index:v4.21.2
+apiVersion: operators.coreos.com/v1alpha1
+kind: CatalogSource
+metadata:
+  name: odf-pinned-catalog
+  namespace: openshift-marketplace
+spec:
+  sourceType: grpc
+  image: image-registry.openshift-image-registry.svc:5000/odf-catalog/odf-pinned-index:v4.21.2
+  displayName: ODF Pinned Catalog
+  publisher: Custom
+  updateStrategy:
+    registryPoll:
+      interval: 30m

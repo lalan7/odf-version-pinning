@@ -1,0 +1,50 @@
+# Example StorageCluster for ODF.
+#
+# Edit before applying:
+#   - Set storageClassName to match your platform (e.g., gp3-csi on AWS,
+#     standard-csi on GCP, managed-premium on Azure, or your local class).
+#   - Adjust storage size as needed.
+#   - The topologySpreadConstraints ensure OSDs are distributed across
+#     availability zones. This is recommended for any multi-zone cloud
+#     deployment. Remove or adapt if deploying on a single-zone or
+#     bare-metal cluster.
+apiVersion: ocs.openshift.io/v1
+kind: StorageCluster
+metadata:
+  name: ocs-storagecluster
+  namespace: openshift-storage
+spec:
+  manageNodes: false
+  multiCloudGateway:
+    reconcileStrategy: ignore
+  storageDeviceSets:
+  - name: ocs-deviceset
+    count: 1
+    dataPVCTemplate:
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 512Gi
+        storageClassName: <STORAGE_CLASS>
+        volumeMode: Block
+    placement:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+          - matchExpressions:
+            - key: cluster.ocs.openshift.io/openshift-storage
+              operator: Exists
+      topologySpreadConstraints:
+      - maxSkew: 1
+        topologyKey: topology.kubernetes.io/zone
+        whenUnsatisfiable: DoNotSchedule
+        labelSelector:
+          matchExpressions:
+          - key: app
+            operator: In
+            values:
+            - rook-ceph-osd-prepare
+    portable: true
+    replica: 3
