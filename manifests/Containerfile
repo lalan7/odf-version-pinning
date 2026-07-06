@@ -1,8 +1,9 @@
-FROM registry.redhat.io/openshift4/ose-operator-registry-rhel9:v4.22 AS builder
+ARG OCP_VERSION=v4.22
+FROM registry.redhat.io/openshift4/ose-operator-registry-rhel9:${OCP_VERSION} AS builder
 COPY fbc /configs
 RUN ["/bin/opm", "serve", "/configs", "--cache-dir=/tmp/cache", "--cache-only"]
 
-FROM registry.redhat.io/openshift4/ose-operator-registry-rhel9:v4.22
+FROM registry.redhat.io/openshift4/ose-operator-registry-rhel9:${OCP_VERSION}
 COPY --from=builder /configs /configs
 COPY --from=builder /tmp/cache /tmp/cache
 EXPOSE 50051

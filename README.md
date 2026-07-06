@@ -146,7 +146,10 @@ python3 scripts/filter-catalog.py --version v4.22.0-rhodf --channel stable-4.22
 ```bash
 /tmp/opm validate fbc/
 
-podman build -t odf-pinned-index:v4.21.2 -f manifests/Containerfile .
+# --build-arg OCP_VERSION defaults to v4.22; set to match your cluster
+podman build -t odf-pinned-index:v4.21.2 \
+  --build-arg OCP_VERSION=v4.22 \
+  -f manifests/Containerfile .
 ```
 
 ### 5. Push to a registry
@@ -243,7 +246,7 @@ Updates are manual but controlled.
 # Rebuild catalog with new version
 python3 scripts/filter-catalog.py --version v4.21.5-rhodf --channel stable-4.21
 /tmp/opm validate fbc/
-podman build -t odf-pinned-index:v4.21.5 -f manifests/Containerfile .
+podman build -t odf-pinned-index:v4.21.5 --build-arg OCP_VERSION=v4.22 -f manifests/Containerfile .
 # Push to your registry (same steps as initial push)
 
 # Update CatalogSource image

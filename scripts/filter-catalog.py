@@ -22,6 +22,9 @@ The script auto-discovers ODF sub-operators by scanning the catalog for all
 bundles that share the same version suffix (e.g., 4.21.2-rhodf) and belong to
 packages with a matching channel. This means new sub-operators added in future
 ODF releases are picked up automatically without editing this script.
+
+Note: The full Red Hat catalog is ~105 MB. This script loads it entirely into
+memory (~300 MB peak). Ensure sufficient RAM on the host running the filter.
 """
 
 import argparse
@@ -57,14 +60,19 @@ def parse_args():
     return parser.parse_args()
 
 
+_WHITESPACE = frozenset(" \t\n\r")
+
+
 def parse_catalog(data):
     """Parse a pretty-printed JSON stream into a list of objects."""
     decoder = json.JSONDecoder()
     idx = 0
+    length = len(data)
     objects = []
-    while idx < len(data):
-        idx = json.decoder.WHITESPACE.match(data, idx).end()
-        if idx >= len(data):
+    while idx < length:
+        while idx < length and data[idx] in _WHITESPACE:
+            idx += 1
+        if idx >= length:
             break
         obj, end_idx = decoder.raw_decode(data, idx)
         idx = end_idx
@@ -160,9 +168,10 @@ def main():
     print(f"Written to {args.output}")
 
     if kept != expected:
-        print(f"WARNING: expected {expected} but got {kept}. "
+        print(f"ERROR: expected {expected} but got {kept}. "
               "Some packages may not have a matching channel or bundle.",
               file=sys.stderr)
+        sys.exit(1)
 
 
 if __name__ == "__main__":
