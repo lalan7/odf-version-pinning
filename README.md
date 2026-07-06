@@ -1,8 +1,10 @@
 # ODF Version Pinning: Install a Specific ODF z-stream on OpenShift
 
-> **Testing only.** This tooling is intended for installing a specific ODF z-stream
-> version on a **fresh/new cluster** in lab or test environments. It has not been
-> validated for production use. Always test on a non-production cluster first.
+> **For testing and lab environments only. Do not use in production.**
+>
+> This tooling is intended for installing a specific ODF z-stream version on a
+> **fresh/new cluster** in lab or test environments. It is not designed, validated,
+> or supported for production use.
 >
 > **Pinning a z-stream release is not officially supported by Red Hat.** If you
 > need guidance or encounter issues, raise a support case at
@@ -230,8 +232,7 @@ oc get sc
 ## Updating ODF After Pinning
 
 > **Note:** The update procedures below describe the expected workflow but have
-> **not been tested yet**. Validate on a non-production cluster before relying
-> on them.
+> **not been tested yet**. Use only in lab or test environments.
 
 With the pruned catalog, OLM cannot auto-update (only one version exists).
 Updates are manual but controlled.
