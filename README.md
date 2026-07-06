@@ -12,10 +12,22 @@
 
 ## Problem
 
-On a **connected** OpenShift cluster, OLM installs the **latest z-stream** in a channel
-regardless of `startingCSV`. Subscribing to `stable-4.21` with
+Customers frequently need to install a **specific ODF z-stream version** on a connected
+OpenShift cluster. Common reasons include:
+
+- **Qualification/certification testing** against a known-good storage stack version
+- **Regression testing** a reported issue on the exact version where it was observed
+- **Environment parity** to match a production cluster that runs a specific z-stream
+
+On a connected cluster, OLM installs the **latest z-stream** in a channel regardless of
+`startingCSV`. Subscribing to `stable-4.21` with
 `startingCSV: odf-operator.v4.21.2-rhodf` still installs the channel head (e.g.,
 `4.21.8-rhodf`).
+
+This is a known limitation documented in
+[KCS 7128953](https://access.redhat.com/solutions/7128953), which confirms that
+`startingCSV` does not reliably pin ODF z-stream versions on connected clusters. The
+KCS describes the symptom but does not provide a complete workaround.
 
 OLM's dependency resolver looks at the full channel graph. It treats `startingCSV` as
 a "start from here and upgrade" hint, not a version pin.
